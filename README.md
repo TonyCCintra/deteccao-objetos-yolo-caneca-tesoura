@@ -1,6 +1,3 @@
-# deteccao-objetos-yolo-caneca-tesoura
-Implementação de um detector de objetos YOLOv8 treinado para identificar "Canecas" e "Tesouras". O projeto cobre a rotulagem de dados com Label Studio, treinamento em Google Colab, e demonstração dos resultados da detecção.
-
 # Detecção de Objetos (Caneca e Tesoura) com YOLOv8
 
 ## Descrição do Projeto
@@ -26,15 +23,17 @@ Este projeto demonstra o processo completo de treinamento de um modelo de detec�
 *   `sample_results/`:
     *   `images_with_detections/`: Exemplos de imagens de teste com as detecções realizadas pelo modelo treinado.
     *   `training_plots/`: Gráficos gerados durante o treinamento (ex: `results.png`, `confusion_matrix.png`).
-*   `model_weights/`: (Opcional) Contém o arquivo `best.pt` com os pesos do melhor modelo treinado. [SE FOR GRANDE, SUBSTITUA POR: Os pesos do modelo (`best.pt`) podem ser encontrados [AQUI](LINK_PARA_SEU_GOOGLE_DRIVE_COM_O_BEST.PT)].
+*   `model_weights/`: (Opcional) Contém o arquivo `best.pt` com os pesos do melhor modelo treinado.
+    *   *Nota: Se o arquivo `best.pt` for muito grande para o GitHub, ele pode ser disponibilizado através de um link para o Google Drive.* 
+    *   *Exemplo se linkado:* Os pesos do modelo (`best.pt`) podem ser encontrados [AQUI](LINK_PARA_SEU_GOOGLE_DRIVE_COM_O_BEST.PT_SE_FOR_O_CASO).
 *   `README.md`: Este arquivo.
 
 ## Como Rodar o Projeto (Treinamento e Inferência)
 
 1.  **Preparar o Dataset:**
     *   As imagens foram rotuladas usando o Label Studio e exportadas no formato YOLO.
-    *   O dataset consiste em 60 imagens, divididas em 48 para treino e 12 para validação.
-    *   Os arquivos de imagem e rótulo foram organizados no Google Drive conforme a estrutura esperada pelo `data.yaml`.
+    *   O dataset consiste em 60 imagens (`.jpg`, `.jpeg`, `.png`), divididas em 48 para treino e 12 para validação.
+    *   Os arquivos de imagem e rótulo (`.txt`) foram organizados no Google Drive conforme a estrutura esperada pelo `data.yaml`, com nomes de arquivo base correspondentes.
 2.  **Ambiente:**
     *   O notebook `notebooks/Dio_Treinamento_YOLOv8_Caneca_Tesoura.ipynb` foi projetado para rodar no Google Colab com um ambiente de GPU (Tesla T4 recomendado).
 3.  **Executar o Notebook:**
@@ -43,8 +42,8 @@ Este projeto demonstra o processo completo de treinamento de um modelo de detec�
     *   Execute as células em ordem para:
         *   Montar o Google Drive.
         *   Instalar a biblioteca `ultralytics`.
-        *   Realizar o treinamento do modelo (os caminhos para `data.yaml` e para salvar os resultados estão configurados para uma estrutura específica no Google Drive).
-        *   Realizar a inferência em imagens de teste.
+        *   Realizar o treinamento do modelo (os caminhos para `data.yaml` e para salvar os resultados estão configurados para uma estrutura específica no Google Drive, que deve ser replicada pelo usuário se desejar treinar).
+        *   Realizar a inferência em imagens de teste (os caminhos para as imagens de teste também precisam ser ajustados conforme a localização no Drive do usuário).
 
 ## Resultados do Treinamento
 
@@ -56,31 +55,38 @@ O modelo foi treinado por 50 épocas utilizando o YOLOv8n como base. As principa
 | Caneca   | 6       | 6          | 0.736         | 0.667      | 0.73   | 0.291      |
 | Tesoura  | 6       | 6          | 0.428         | 0.143      | 0.0909 | 0.0259     |
 
-*(Insira aqui o gráfico `results.png` ou outros gráficos relevantes)*
-`![Resultados do Treinamento](sample_results/training_plots/results.png)`
-`![Matriz de Confusão](sample_results/training_plots/confusion_matrix.png)`
+**Gráficos do Treinamento:**
 
-**Análise:** O modelo demonstrou um bom aprendizado para a classe "Caneca", alcançando um mAP@0.5 de 0.73. O desempenho para a classe "Tesoura" foi inferior (mAP@0.5 de 0.09), indicando que o modelo teve mais dificuldade com esta classe, possivelmente devido à menor quantidade de características distintivas visuais, variações de forma, ou oclusões nas imagens de treino/validação para este objeto em um dataset pequeno.
+![Resultados Gerais do Treinamento](sample_results/training_plots/results.png)
+_Legenda: Curvas de métricas e perdas ao longo das épocas de treinamento._
+
+![Matriz de Confusão](sample_results/training_plots/confusion_matrix.png)
+_Legenda: Matriz de confusão para o conjunto de validação._
+
+**Análise:** O modelo demonstrou um bom aprendizado para a classe "Caneca", alcançando um mAP@0.5 de 0.73. O desempenho para a classe "Tesoura" foi inferior (mAP@0.5 de 0.0909), indicando que o modelo teve mais dificuldade com esta classe. Isso pode ser atribuído a fatores como a complexidade visual das tesouras (formatos e ângulos variados, partes finas), menor distinção em relação ao fundo em algumas imagens, ou a quantidade limitada de dados de treinamento e validação para esta classe.
 
 ## Demonstração Visual (Exemplos de Detecção)
 
-Abaixo estão exemplos de detecções realizadas pelo modelo treinado em imagens de teste:
+Abaixo estão exemplos de detecções realizadas pelo modelo treinado (`best.pt`) em imagens de teste que não fizeram parte do conjunto de treino ou validação.
 
-*(Insira aqui uma ou duas das suas melhores imagens com detecção)*
-`![Detecção Exemplo 1](sample_results/images_with_detections/minha_imagem_teste2.jpeg)` 
-*(Legenda: Detecção de "Caneca" em uma imagem de teste.)*
+![Detecção de Caneca](sample_results/images_with_detections/minha_imagem_teste2.jpeg)
+_Legenda: Exemplo de detecção bem-sucedida da classe "Caneca" em uma imagem de teste. (Arquivo: minha_imagem_teste2.jpeg)_
+
+![Exemplo Sem Detecção](sample_results/images_with_detections/minha_imagem_teste1.jpeg)
+_Legenda: Exemplo de imagem de teste onde nenhuma das classes alvo ("Caneca" ou "Tesoura") foi detectada com o limiar de confiança configurado. (Arquivo: minha_imagem_teste1.jpeg)_
 
 ## Desafios Enfrentados e Aprendizados
 
-Durante o desenvolvimento deste projeto, diversos desafios foram encontrados, principalmente relacionados à correta configuração dos dados e do ambiente:
-*   **Correspondência de Nomes de Arquivo:** Garantir que os nomes dos arquivos de imagem e seus respectivos arquivos de rótulo `.txt` fossem idênticos (ignorando a extensão) foi crucial e exigiu um processo de "começar do zero" na organização dos dados.
-*   **Configuração do `data.yaml`:** Assegurar que os caminhos para os datasets de treino/validação e os nomes das classes estivessem corretos.
-*   **Ambiente Google Colab:** Lidar com a montagem do Google Drive, seleção de GPU e reinícios de ambiente que exigiam reinstalação de bibliotecas.
-*   **Depuração do "No Labels Found":** Um processo iterativo de verificação de caminhos, nomes de arquivos, conteúdo dos rótulos e arquivos de cache do YOLO.
+Durante o desenvolvimento deste projeto, diversos desafios foram encontrados, principalmente relacionados à correta configuração dos dados e do ambiente de desenvolvimento:
+*   **Correspondência de Nomes de Arquivo:** Um aprendizado crucial foi a necessidade de garantir que os nomes dos arquivos de imagem e seus respectivos arquivos de rótulo `.txt` fossem idênticos (ignorando a extensão). Discrepâncias aqui levaram ao erro "No labels found" e exigiram uma reorganização cuidadosa dos dados.
+*   **Configuração do `data.yaml`:** Assegurar que os caminhos para os datasets de treino/validação e os nomes/ordem das classes estivessem precisamente corretos foi fundamental.
+*   **Ambiente Google Colab:** Lidar com a montagem do Google Drive, a correta seleção e ativação da GPU, e os reinícios de ambiente (que exigiam reinstalação de bibliotecas) foram etapas importantes do fluxo de trabalho.
+*   **Depuração Iterativa:** O processo de identificar a causa raiz dos erros, como `FileNotFoundError` ou o problema de "No Labels Found", envolveu uma depuração passo a passo, verificando caminhos, nomes de arquivos, conteúdo dos rótulos e arquivos de cache do YOLO.
 
-Esses desafios reforçaram a importância da atenção meticulosa aos detalhes na preparação de dados para projetos de Machine Learning.
+Esses desafios reforçaram a importância da atenção meticulosa aos detalhes na preparação de dados e configuração do ambiente para projetos de Machine Learning e Visão Computacional.
 
 ## Autor
 
-Tony Cajaiba Cintra
-*   GitHub: https://github.com/TonyCCintra/
+**Tony Cajaiba Cintra**
+*   GitHub: [https://github.com/TonyCCintra/](https://github.com/TonyCCintra/)
+*   LinkedIn: [SEU_LINK_DO_LINKEDIN_AQUI (opcional)]
