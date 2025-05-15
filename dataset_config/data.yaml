@@ -1,0 +1,13 @@
+﻿# Caminhos para as pastas de treino e validação no Google Colab
+# (O Colab acessa seu Drive como /content/drive/MyDrive/)
+train: /content/drive/MyDrive/dio_projeto_yolo_treinamento/images/train
+val: /content/drive/MyDrive/dio_projeto_yolo_treinamento/images/val
+
+
+# Número de classes
+nc: 2
+
+
+# Nomes das classes (na MESMA ORDEM do seu arquivo classes.txt)
+# "Caneca" é ID 0, "Tesoura" é ID 1
+names: ['Caneca', 'Tesoura']
